@@ -1,3 +1,4 @@
+.vscode
 # Prerequisites
 *.d
 
@@ -50,3 +51,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# excute file
+cub3D
