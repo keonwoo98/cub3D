@@ -5,7 +5,9 @@
 ### **Contents**
 ------------
 > [Subject](#-subject)
+
 > [Functions](#-Functions)
+
 > [Commit-Rule](#-commit-message-rule)
 
 ### **Subject**
