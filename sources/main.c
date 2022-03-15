@@ -1,248 +1,237 @@
 #include "../includes/cub3d.h"
 
-void rotate_matrix(t_vec *vec, double angle)
+/*
+0 : 빈 공간
+1 : 벽
+2 : 내부의 작은 방
+3 : 몇 개의 기둥
+4 : 복도
+*/
+int testMap[mapWidth][mapHeight] =
 {
-	double tmp;
+	{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7},
+	{4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 7},
+	{4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7},
+	{4, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7},
+	{4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 7},
+	{4, 0, 4, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 0, 7, 7, 7, 7, 7},
+	{4, 0, 5, 0, 0, 0, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 7, 0, 0, 0, 7, 7, 7, 1},
+	{4, 0, 6, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 0, 0, 0, 8},
+	{4, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 1},
+	{4, 0, 8, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 0, 0, 0, 8},
+	{4, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 7, 7, 7, 1},
+	{4, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 0, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 1},
+	{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6},
+	{8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4},
+	{6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6},
+	{4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 6, 0, 6, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3},
+	{4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2},
+	{4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 0, 0, 5, 0, 0, 2, 0, 0, 0, 2},
+	{4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2},
+	{4, 0, 6, 0, 6, 0, 0, 0, 0, 4, 6, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 2},
+	{4, 0, 0, 5, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2},
+	{4, 0, 6, 0, 6, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 5, 0, 0, 2, 0, 0, 0, 2},
+	{4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2},
+	{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3}
+};
 
-	tmp = cos(angle) * vec->x - sin(angle) * vec->y;
-	vec->y = sin(angle) * vec->x + cos(angle) * vec->y;
-	vec->x = tmp;
+void rotate_vector(t_info *info, double angle)
+{
+	double oldDirX;
+	double oldPlaneX;
+
+	oldDirX = info->ray.dirX;
+	oldPlaneX = info->ray.planeX;
+	info->ray.dirX = info->ray.dirX * cos(angle) - info->ray.dirY * sin(angle);
+	info->ray.dirY = oldDirX * sin(angle) + info->ray.dirY * cos(angle);
+	info->ray.planeX = info->ray.planeX * cos(angle) - info->ray.planeY * sin(angle);
+	info->ray.planeY = oldPlaneX * sin(angle) + info->ray.planeY * cos(angle);
 }
 
 int key_press(int keycode, t_info *info)
 {
+	if (keycode == KEY_W)
+	{
+		if (!testMap[(int)(info->ray.posX + info->ray.dirX * info->ray.moveSpeed)][(int)(info->ray.posY)])
+			info->ray.posX += info->ray.dirX * info->ray.moveSpeed;
+		if (!testMap[(int)(info->ray.posX)][(int)(info->ray.posY + info->ray.dirY * info->ray.moveSpeed)])
+			info->ray.posY += info->ray.dirY * info->ray.moveSpeed;
+	}
+	if (keycode == KEY_S)
+	{
+		if (!testMap[(int)(info->ray.posX - info->ray.dirX * info->ray.moveSpeed)][(int)(info->ray.posY)])
+			info->ray.posX -= info->ray.dirX * info->ray.moveSpeed;
+		if (!testMap[(int)(info->ray.posX)][(int)(info->ray.posY - info->ray.dirY * info->ray.moveSpeed)])
+			info->ray.posY -= info->ray.dirY * info->ray.moveSpeed;
+	}
+	if (keycode == KEY_D)
+	{
+		rotate_vector(info, -info->ray.rotSpeed);
+		// double oldDirX = info->ray.dirX;
+		// info->ray.dirX = info->ray.dirX * cos(-info->ray.rotSpeed) - info->ray.dirY * sin(-info->ray.rotSpeed);
+		// info->ray.dirY = oldDirX * sin(-info->ray.rotSpeed) + info->ray.dirY * cos(-info->ray.rotSpeed);
+		// double oldPlaneX = info->ray.planeX;
+		// info->ray.planeX = info->ray.planeX * cos(-info->ray.rotSpeed) - info->ray.planeY * sin(-info->ray.rotSpeed);
+		// info->ray.planeY = oldPlaneX * sin(-info->ray.rotSpeed) + info->ray.planeY * cos(-info->ray.rotSpeed);
+	}
+	if (keycode == KEY_A)
+	{
+		rotate_vector(info, info->ray.rotSpeed);
+		// double oldDirX = info->ray.dirX;
+		// info->ray.dirX = info->ray.dirX * cos(info->ray.rotSpeed) - info->ray.dirY * sin(info->ray.rotSpeed);
+		// info->ray.dirY = oldDirX * sin(info->ray.rotSpeed) + info->ray.dirY * cos(info->ray.rotSpeed);
+		// double oldPlaneX = info->ray.planeX;
+		// info->ray.planeX = info->ray.planeX * cos(info->ray.rotSpeed) - info->ray.planeY * sin(info->ray.rotSpeed);
+		// info->ray.planeY = oldPlaneX * sin(info->ray.rotSpeed) + info->ray.planeY * cos(info->ray.rotSpeed);
+	}
 	if (keycode == KEY_ESC)
 		exit(EXIT_SUCCESS);
-	if (keycode == KEY_LEFT)
-		rotate_matrix(&info->dir_vec, PI / 36);
-	if (keycode == KEY_RIGHT)
-		rotate_matrix(&info->dir_vec, -PI / 36);
 	return (0);
 }
 
-int exit_button(void)
+void draw(t_info *info)
 {
-	exit(EXIT_SUCCESS);
-}
-
-void init_ray(t_ray *ray)
-{
-	ray->posX = 22.0;
-	ray->posY = 11.5;	// 플레이어의 초기 위치벡터
-	ray->dirX = -1.0;
-	ray->dirY = 0.0;	// 플레이어의 초기 방향벡터
-	ray->planeX = 0.0;	// 플레이어의 카메라 평면
-	ray->planeY = 0.66;	// FOV는 "카메라 평면의 길이 : 방향벡터의 길이"의 비율로 결정됨
-	ray->time = 0;	// 현재 프레임 시간
-	ray->oldTime = 0;	// 이전 프레임 시간
-}
-
-void init_info(t_info *info)
-{
-	info->win_width = 0;
-	info->win_height = 0;
-	info->bmp = 0;
-	init_ray(&info->ray);
-	info->dir_vec.x = 0.0;
-	info->dir_vec.y = 0.0;
-
-	// test case
-	info->win_width = mapWidth;
-	info->win_height = mapHeight;
-	memcpy(info->map, testMap, sizeof(int) * mapWidth * mapHeight);
-	// test case
-}
-
-
-int check_arg(int argc, char **argv, t_info *info)
-{
-	int i;
-
-	if (argc < 2 || argc > 4)
+	for (int y = 0; y < screenHeight; y++)
 	{
-		ft_putstr_fd("input error\n", 2);
-		return (EXIT_FAILURE);
+		for (int x = 0; x < screenWidth; x++)
+			info->img.data[y * screenWidth + x] = info->buf[y][x];
 	}
-	i = ft_strlen(argv[1]) - 4;
-	if (ft_strncmp(&argv[1][i], ".cub", 4))
-	{
-		ft_putstr_fd("input error\n", 2);
-		return (EXIT_FAILURE);
-	}
-	if (argc == 3)
-	{
-		if (ft_strlen(argv[2]) != 6 || ft_strncmp(argv[2], "--save", 6))
-		{
-			ft_putstr_fd("invalid arg\n", 2);
-			return (EXIT_FAILURE);
-		}
-		else
-			info->bmp = 1;
-	}
-	return (EXIT_SUCCESS);
+	mlx_put_image_to_window(info->mlx, info->win, info->img.img, 0, 0);
 }
 
-int parse_map(int fd, t_info *info)
-{
-	char *line;
-
-	// parse texture, color, space, etc..
-	return (EXIT_SUCCESS);
-}
-
-int parsing(int argc, char **argv, t_info *info)
-{
-	int fd;
-
-	if (check_arg(argc, argv, info))
-		return (EXIT_FAILURE);
-	fd = open(argv[1], O_RDONLY);
-	if (!fd)
-		return (EXIT_FAILURE);
-	if (parse_map(fd, info))
-		return (EXIT_FAILURE);
-	close(fd);
-	return (EXIT_SUCCESS);
-}
-
-void draw_hor_line(int x, t_info *info)
-{
-	int i;
-	int width;
-
-	width = info->win_height * T_SIZE;
-	i = -1;
-	while (++i < width)
-		info->data[width * x + i] = GRAY;
-}
-
-void draw_ver_line(int y, t_info *info)
-{
-	int i;
-	int width;
-	int height;
-
-	width = info->win_height * T_SIZE;
-	height = info->win_width * T_SIZE;
-	i = -1;
-	while (++i < height)
-		info->data[width * i + y] = GRAY;
-}
-
-void draw_line(t_info *info)
-{
-	int i;
-
-	i = -1;
-	while (++i < info->win_width)
-		draw_hor_line(i * T_SIZE, info);
-	i = -1;
-	while (++i < info->win_height)
-		draw_ver_line(i * T_SIZE, info);
-}
-
-void draw_square(int x, int y, t_info *info, int color)
-{
-	int dx;
-	int dy;
-	int width;
-
-	width = info->win_height * T_SIZE;
-	dx = -1;
-	while (++dx < T_SIZE)
-	{
-		dy = -1;
-		while (++dy < T_SIZE)
-			info->data[width * (x + dx) + (y + dy)] = color;
-	}
-}
-
-void draw_squares(t_info *info)
+void calc(t_info *info)
 {
 	int x;
-	int y;
 
-	x = -1;
-	while (++x < info->win_width)
+	x = 0;
+	while (x < screenWidth)
 	{
-		y = -1;
-		while (++y < info->win_height)
+		double cameraX = 2 * x / (double)screenWidth - 1;
+		double rayDirX = info->ray.dirX + info->ray.planeX * cameraX;
+		double rayDirY = info->ray.dirY + info->ray.planeY * cameraX;
+
+		int mapX = (int)info->ray.posX;
+		int mapY = (int)info->ray.posY;
+
+		double sideDistX;
+		double sideDistY;
+
+		// double deltaDistX = fabs(1 / rayDirX);
+		// double deltaDistY = fabs(1 / rayDirY);
+		double deltaDistX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
+		double deltaDistY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
+		double perpWallDist;
+
+		int stepX;
+		int stepY;
+
+		int hit = 0;
+		int side;
+
+		if (rayDirX < 0)
 		{
-			if (info->map[x][y] == 0)
-				draw_square(x * T_SIZE, y * T_SIZE, info, WHITE);
-			else
-				draw_square(x * T_SIZE, y * T_SIZE, info, BLACK);
+			stepX = -1;
+			sideDistX = (info->ray.posX - mapX) * deltaDistX;
 		}
-	}
-}
-
-void draw_ray(t_info *info, double angle)
-{
-	double ray_x;
-	double ray_y;
-	double dx;
-	double dy;
-	double max_value;
-
-	ray_x = 22.0 * T_SIZE;
-	ray_y = 11.5 * T_SIZE;
-	dx = cos(angle) * info->ray.dirX - sin(angle) * info->ray.dirY;
-	dy = sin(angle) * info->ray.dirX + cos(angle) * info->ray.dirY;
-	max_value = fmax(fabs(dx), fabs(dy));
-	dx /= max_value;
-	dy /= max_value;
-	while (1)
-	{
-		if (info->data[mapWidth * (int)floor(ray_y) + (int)floor(ray_x)] != BLACK)
-			info->data[mapWidth * (int)floor(ray_y) + (int)floor(ray_x)] = RED;
-		// if (info->map[(int)(ray_x / T_SIZE)][(int)(ray_y / T_SIZE)] != BLACK)
-		// 	info->map[(int)(ray_x / T_SIZE)][(int)(ray_y / T_SIZE)] = RED;
 		else
-			break ;
-		ray_x += dx;
-		ray_y += dy;
-	}
-}
+		{
+			stepX = 1;
+			sideDistX = (mapX + 1.0 - info->ray.posX) * deltaDistX;
+		}
+		if (rayDirY < 0)
+		{
+			stepY = -1;
+			sideDistY = (info->ray.posY - mapY) * deltaDistY;
+		}
+		else
+		{
+			stepY = 1;
+			sideDistY = (mapY + 1.0 - info->ray.posY) * deltaDistY;
+		}
 
-void draw_rays(t_info *info)
-{
-	double angle;
+		while (hit == 0)
+		{
+			if (sideDistX < sideDistY)
+			{
+				sideDistX += deltaDistX;
+				mapX += stepX;
+				side = 0;
+			}
+			else
+			{
+				sideDistY += deltaDistY;
+				mapY += stepY;
+				side = 1;
+			}
+			if (testMap[mapX][mapY] > 0)
+				hit = 1;
+		}
+		if (side == 0)
+			perpWallDist = (mapX - info->ray.posX + (1 - stepX) / 2) / rayDirX;
+		else
+			perpWallDist = (mapY - info->ray.posY + (1 - stepY) / 2) / rayDirY;
+		
+		int lineHeight = (int)(screenHeight / perpWallDist);
 
-	angle = 0;
-	while (angle < PI / 6)
-	{
-		draw_ray(info, angle);
-		draw_ray(info, -angle);
-		angle += PI / 72;
+		int drawStart = -lineHeight / 2 + screenHeight / 2;
+		if (drawStart < 0)
+			drawStart = 0;
+		int drawEnd = lineHeight / 2 + screenHeight / 2;
+		if (drawEnd >= screenHeight)
+			drawEnd = screenHeight - 1;
+		
+		int texNum = testMap[mapX][mapY];
+
+		double wallX;	// 벽의 int형 좌표가 아닌 double형 좌표로 벽의 정확히 어디에 부딪혔는지를 나타냄
+		if (side == 0)
+			wallX = info->ray.posY + perpWallDist * rayDirY;
+		else
+			wallX = info->ray.posX + perpWallDist * rayDirX;
+		wallX -= floor(wallX);
+
+		int texX = (int)(wallX * (double)texWidth);
+		if (side == 0 && rayDirX > 0)
+			texX = texWidth - texX - 1;
+		if (side == 1 && rayDirY < 0)
+			texX = texWidth - texX - 1;
+		
+		double step = 1.0 * texHeight / lineHeight;
+
+		double texPos = (drawStart - screenHeight / 2 + lineHeight / 2) * step;
+		for (int y = drawStart; y < drawEnd; y++)
+		{
+			int texY = (int)texPos & (texHeight - 1);
+			texPos += step;
+			int color = info->texture[texNum][texHeight * texY + texX];
+			if (side == 1)
+				color = (color >> 1) & 8355711;
+			info->buf[y][x] = color;
+		}
+		x++;
 	}
-	mlx_put_image_to_window(info->mlx, info->win, info->img, 0, 0);
 }
 
 int main_loop(t_info *info)
 {
-	draw_squares(info);
-	draw_line(info);
-	draw_rays(info);
-	// draw_player(info);
-	mlx_put_image_to_window(info->mlx, info->win, info->img, 0, 0);
-	return (EXIT_SUCCESS);
+	calc(info);
+	draw(info);
+	return (0);
 }
 
 int main(int argc, char **argv)
 {
 	t_info info;
 
+	info.mlx = mlx_init();
 	init_info(&info);
 	if (parsing(argc, argv, &info))
 		return (-1);
 
-	info.mlx = mlx_init();
-	info.win = mlx_new_window(info.mlx, info.win_width * T_SIZE, info.win_height * T_SIZE, "Cub3D");
-	info.img = mlx_new_image(info.mlx, info.win_width * T_SIZE, info.win_height * T_SIZE);
-	info.data = (int *)mlx_get_data_addr(info.img, &info.bpp, &info.line_size, &info.endian);
-	mlx_hook(info.win, KEY_EVENT_PRESS, 0, key_press, &info);
-	mlx_hook(info.win, KEY_EVENT_EXIT, 0, exit_button, &info);
-	mlx_loop_hook(info.mlx, main_loop, &info);
+	info.win = mlx_new_window(info.mlx, screenWidth, screenHeight, "Cub3D");
+	info.img.img = mlx_new_image(info.mlx, screenWidth, screenHeight);
+	info.img.data = (int *)mlx_get_data_addr(info.img.img, &info.img.bpp, &info.img.line_size, &info.img.endian);
+	mlx_hook(info.win, KEY_EVENT_PRESS, 0, &key_press, &info);
+	mlx_loop_hook(info.mlx, &main_loop, &info);
 	mlx_loop(info.mlx);
 	return (0);
 }
