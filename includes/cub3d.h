@@ -11,17 +11,12 @@
 
 # define PI 3.14159265359
 
+# define texWidth 64
+# define texHeight 64
 # define mapWidth 24
 # define mapHeight 24
 # define screenWidth 640
 # define screenHeight 480
-
-// # define ROW 11
-// # define COL 15
-// # define TILE_SIZE 32
-// # define WIDTH COL * TILE_SIZE
-// # define HEIGHT ROW * TILE_SIZE
-# define T_SIZE 30
 
 # define KEY_ESC 53
 # define KEY_EVENT_PRESS 2
@@ -38,8 +33,9 @@
 # define BLUE 0x0000FF
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
-# define GRAY 0x007F7F7F
-# define GOLD 0x00FFd700
+# define YELLOW 0xFFFF00
+# define GREY 0x7F7F7F
+# define GOLD 0xFFD700
 # define SILVER 0xC0C0C0
 
 typedef struct s_vec
@@ -56,23 +52,20 @@ typedef struct s_ray
 	double dirY;	// 플레이어의 초기 방향벡터
 	double planeX;	// 플레이어의 카메라 평면
 	double planeY;	// FOV는 "카메라 평면의 길이 : 방향벡터의 길이"의 비율로 결정됨
-	double time;	// 현재 프레임 시간
-	double oldTime;	// 이전 프레임 시간
-
-    // t_vec dir;
-    // t_vec side_vec;
-    // t_vec delta;
-    // int step_x;
-    // int step_y;
-    // int side;
-    // double wall_dist;
-    // int line_height;
-    // int map_x;
-    // int map_y;
-    // int draw_start;
-    // int draw_end;
-    // int collision_dir;
+	double moveSpeed;
+	double rotSpeed;
 }t_ray;
+
+typedef struct s_img
+{
+	void *img;
+	int *data;
+	int line_size;
+	int bpp;
+	int endian;
+	int img_width;
+	int img_height;
+}t_img;
 
 typedef struct s_info
 {
@@ -80,51 +73,17 @@ typedef struct s_info
 	void *win;
     int map[mapWidth][mapHeight];
 	// int **map;
-	void *img;
-	int *data;
-	int bpp;
-	int line_size;
-	int endian;
-	int win_width;
-	int win_height;
 	int bmp;
+	int **buf;
+	int **texture;
+	t_img img;
     t_ray ray;
-    t_vec dir_vec;
 }t_info;
 
-/*
-0 : 빈 공간
-1 : 벽
-2 : 내부의 작은 방
-3 : 몇 개의 기둥
-4 : 복도
-*/
-int testMap[mapWidth][mapHeight] =
-{
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 3, 0, 3, 0, 3, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2, 0, 0, 0, 0, 3, 0, 3, 0, 3, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 4, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 4, 0, 0, 0, 0, 5, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 4, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 4, 0, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-};
+
+
+void init_info(t_info *info);
+int parsing(int argc, char **argv, t_info *info);
+void load_texture(t_info *info);
 
 #endif
