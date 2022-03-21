@@ -20,6 +20,7 @@
 
 # define KEY_ESC 53
 # define KEY_EVENT_PRESS 2
+# define KEY_EVENT_RELEASE 3
 # define KEY_EVENT_EXIT 17
 # define KEY_W 13
 # define KEY_A 0
@@ -37,6 +38,12 @@
 # define GREY 0x7F7F7F
 # define GOLD 0xFFD700
 # define SILVER 0xC0C0C0
+# define SKYBLUE 0x87CEEB
+
+# define MAX_FD 1024
+# define BUFFER_SIZE 512
+
+int testMap[mapWidth][mapHeight];
 
 typedef struct s_vec
 {
@@ -73,17 +80,57 @@ typedef struct s_info
 	void *win;
     int map[mapWidth][mapHeight];
 	// int **map;
-	int bmp;
 	int **buf;
 	int **texture;
+	int key_a;
+	int key_w;
+	int key_s;
+	int key_d;
 	t_img img;
     t_ray ray;
 }t_info;
 
+typedef struct s_calc
+{
+	double cameraX;
+	double rayDirX;
+	double rayDirY;
+	int mapX;
+	int mapY;
+	double sideDistX;
+	double sideDistY;
+	double deltaDistX;
+	double deltaDistY;
+	double perpWallDist;
+	int stepX;
+	int stepY;
+	int hit;
+	int side;
+	int lineHeight;
+	int drawStart;
+	int drawEnd;
+	int texNum;
+	double wallX;
+	int texX;
+	int texY;
+	double step;
+	double texPos;
+	double spriteX;
+	double spriteY;
+}t_calc;
 
-
+int get_next_line(int fd, char **line);
 void init_info(t_info *info);
 int parsing(int argc, char **argv, t_info *info);
 void load_texture(t_info *info);
+void init_dda(t_info *info, t_calc *calc);
+void perform_dda(t_info *info, t_calc *calc);
+void start_ray(int x, t_info *info, t_calc *calc);
+void init_wall_texture(t_info *info, t_calc *calc);
+void input_wall_texture(int x, t_info *info, t_calc *calc);
+void player_move(t_info *info);
+int key_press(int keycode, t_info *info);
+int key_release(int keycode, t_info *info);
+int exit_press(t_info *info);
 
 #endif
