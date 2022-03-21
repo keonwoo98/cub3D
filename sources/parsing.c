@@ -4,28 +4,18 @@ int check_arg(int argc, char **argv, t_info *info)
 {
 	int i;
 
-	if (argc < 2 || argc > 4)
+	if (argc != 2)
 	{
 		ft_putstr_fd("input error\n", 2);
-		return (EXIT_FAILURE);
+		return (1);
 	}
 	i = ft_strlen(argv[1]) - 4;
 	if (ft_strncmp(&argv[1][i], ".cub", 4))
 	{
 		ft_putstr_fd("input error\n", 2);
-		return (EXIT_FAILURE);
+		return (1);
 	}
-	if (argc == 3)
-	{
-		if (ft_strlen(argv[2]) != 6 || ft_strncmp(argv[2], "--save", 6))
-		{
-			ft_putstr_fd("invalid arg\n", 2);
-			return (EXIT_FAILURE);
-		}
-		else
-			info->bmp = 1;
-	}
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 int parse_map(int fd, t_info *info)
@@ -33,7 +23,25 @@ int parse_map(int fd, t_info *info)
 	char *line;
 
 	// parse texture, color, space, etc..
-	return (EXIT_SUCCESS);
+	while (get_next_line(fd, &line) > -1)
+	{
+		if (line[0] == 'R' || line[0] == 'N' || line[0] == 'S' || line[0] == 'W'
+				|| line[0] == 'E')
+		{
+			// texture
+		}
+		else if (line[0] == 'F' || line[0] == 'C')
+		{
+			// color
+		}
+		else
+		{
+			// space
+		}
+		free(line);
+	}
+	free(line);
+	return (0);
 }
 
 int parsing(int argc, char **argv, t_info *info)
@@ -41,12 +49,12 @@ int parsing(int argc, char **argv, t_info *info)
 	int fd;
 
 	if (check_arg(argc, argv, info))
-		return (EXIT_FAILURE);
+		return (1);
 	fd = open(argv[1], O_RDONLY);
 	if (!fd)
-		return (EXIT_FAILURE);
-	if (parse_map(fd, info))
-		return (EXIT_FAILURE);
+		return (1);
+	// if (parse_map(fd, info))
+	// 	return (1);
 	close(fd);
-	return (EXIT_SUCCESS);
+	return (0);
 }
