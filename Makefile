@@ -20,12 +20,19 @@ SOURCES_DIRECTORY = ./sources/
 SOURCES_LIST =	main.c\
 				parse.c\
 				parse_map.c\
+				parse_color.c\
+				get_texture.c\
+				get_map_info.c\
 				get_next_line.c\
+				ft_strjoin_free.c\
+				player_position.c\
 				init.c\
 				ray.c\
 				texture.c\
 				key_press.c\
-				utils.c
+				utils.c\
+				error.c\
+				list.c
 SOURCES = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_LIST))
 
 OBJECTS_DIRECTORY = objects/
