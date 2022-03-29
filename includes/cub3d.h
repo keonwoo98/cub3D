@@ -9,25 +9,53 @@
 #include <math.h>
 #include <fcntl.h>
 
-# define PI 3.14159265359
+# define RETURN_SUCCESS 0
+# define RETURN_FAILURE 1
 
 # define texWidth 64
 # define texHeight 64
 # define mapWidth 24
 # define mapHeight 24
-# define screenWidth 640
-# define screenHeight 480
+# define screenWidth 1280
+# define screenHeight 720
 
-# define KEY_ESC 53
-# define KEY_EVENT_PRESS 2
-# define KEY_EVENT_RELEASE 3
-# define KEY_EVENT_EXIT 17
-# define KEY_W 13
-# define KEY_A 0
-# define KEY_S 1
-# define KEY_D 2
-# define KEY_LEFT 123
-# define KEY_RIGHT 124
+enum e_key {
+	KEY_ESC = 53,
+	KEY_EVENT_PRESS = 2,
+	KEY_EVENT_RELEASE = 3,
+	KEY_EVENT_EXIT = 17,
+	KEY_W = 13,
+	KEY_A = 0,
+	KEY_S = 1,
+	KEY_D = 2,
+	KEY_LEFT = 123,
+	KEY_RIGHT = 124
+};
+
+// # define KEY_ESC 53
+// # define KEY_EVENT_PRESS 2
+// # define KEY_EVENT_RELEASE 3
+// # define KEY_EVENT_EXIT 17
+// # define KEY_W 13
+// # define KEY_A 0
+// # define KEY_S 1
+// # define KEY_D 2
+// # define KEY_LEFT 123
+// # define KEY_RIGHT 124
+
+
+enum e_dir {
+	NO = 0,
+	SO = 1,
+	WE = 2,
+	EA = 3
+};
+// # define NO 0
+// # define EA 1
+// # define SO 2
+// # define WE 3
+# define FLOOR 0
+# define CEILING 1
 
 # define RED 0xFF0000
 # define GREEN 0x00FF00
@@ -40,32 +68,40 @@
 # define SILVER 0xC0C0C0
 # define SKYBLUE 0x87CEEB
 
-# define MAX_FD 1024
-# define BUFFER_SIZE 512
+# define MAX_FD 256
+# define BUFFER_SIZE 1024
 
-int testMap[mapWidth][mapHeight];
+// int testMap[mapWidth][mapHeight];
 
-typedef struct s_vec
+typedef struct s_node t_node;
+
+typedef struct s_node
 {
-    double x;
-    double y;
-}t_vec;
+	char *map;
+	t_node *next;
+}t_node;
+
+typedef struct s_maplist
+{
+	int			size;
+	t_node		*head;
+	t_node		*tail;
+}t_maplist;
 
 typedef struct s_ray
 {
 	double posX;
-	double posY;	// 플레이어의 초기 위치벡터
+	double posY;
 	double dirX;
-	double dirY;	// 플레이어의 초기 방향벡터
-	double planeX;	// 플레이어의 카메라 평면
-	double planeY;	// FOV는 "카메라 평면의 길이 : 방향벡터의 길이"의 비율로 결정됨
-	double moveSpeed;
-	double rotSpeed;
+	double dirY;
+	double planeX;
+	double planeY;
 }t_ray;
 
 typedef struct s_img
 {
 	void *img;
+	char *img_addr;
 	int *data;
 	int line_size;
 	int bpp;
@@ -78,16 +114,24 @@ typedef struct s_info
 {
 	void *mlx;
 	void *win;
-    int map[mapWidth][mapHeight];
-	// int **map;
 	int **buf;
 	int **texture;
+	char **map;
+	int map_width;
+	int map_height;
 	int key_a;
 	int key_w;
 	int key_s;
 	int key_d;
+	int player;
+	int color_flag;
+	int dir_flag;
+	int pos_flag;
+	int floor;
+	int ceiling;
 	t_img img;
     t_ray ray;
+	t_maplist *list;
 }t_info;
 
 typedef struct s_calc
@@ -121,8 +165,8 @@ typedef struct s_calc
 
 int get_next_line(int fd, char **line);
 void init_info(t_info *info);
-int parsing(int argc, char **argv, t_info *info);
-void load_texture(t_info *info);
+void parse(int argc, char **argv, t_info *info);
+void load_texture(t_info *info, int dir, char *path);
 void init_dda(t_info *info, t_calc *calc);
 void perform_dda(t_info *info, t_calc *calc);
 void start_ray(int x, t_info *info, t_calc *calc);
@@ -132,5 +176,14 @@ void player_move(t_info *info);
 int key_press(int keycode, t_info *info);
 int key_release(int keycode, t_info *info);
 int exit_press(t_info *info);
+t_maplist *create_list(void);
+void free_double_char(char **str);
+void free_list(t_info *info);
+void deinitialize(t_info *info);
+void init_map(t_info *info);
+void dup_map(t_info *info);
+void get_map_info(t_info *info);
+void exit_error(char *err_msg);
+void system_error(char *err_msg);
 
 #endif
