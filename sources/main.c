@@ -1,37 +1,18 @@
 #include "../includes/cub3d.h"
 
-int worldMap[mapWidth][mapHeight] =
+int
+	exit_press(t_info *info)
 {
-	{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7},
-	{4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 7},
-	{4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7},
-	{4, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7},
-	{4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 7},
-	{4, 0, 4, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 0, 7, 7, 7, 7, 7},
-	{4, 0, 5, 0, 0, 0, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 7, 0, 0, 0, 7, 7, 7, 1},
-	{4, 0, 6, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 0, 0, 0, 8},
-	{4, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 1},
-	{4, 0, 8, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 0, 0, 0, 8},
-	{4, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 7, 7, 7, 1},
-	{4, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 0, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 1},
-	{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6},
-	{8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4},
-	{6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6},
-	{4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 6, 0, 6, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3},
-	{4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2},
-	{4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 0, 0, 5, 0, 0, 2, 0, 0, 0, 2},
-	{4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2},
-	{4, 0, 6, 0, 6, 0, 0, 0, 0, 4, 6, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 2},
-	{4, 0, 0, 5, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2},
-	{4, 0, 6, 0, 6, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 5, 0, 0, 2, 0, 0, 0, 2},
-	{4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2},
-	{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3}
-};
+	free_double_char(info->map);
+	deinitialize(info);
+	exit(EXIT_SUCCESS);
+}
 
-void draw(t_info *info)
+void
+	draw(t_info *info)
 {
-	int x;
-	int y;
+	int		x;
+	int		y;
 
 	y = -1;
 	while (++y < screenHeight)
@@ -43,10 +24,11 @@ void draw(t_info *info)
 	mlx_put_image_to_window(info->mlx, info->win, info->img.img, 0, 0);
 }
 
-void calc(t_info *info)
+void
+	calc(t_info *info)
 {
-	int x;
-	t_calc calc;
+	int		x;
+	t_calc	calc;
 
 	x = 0;
 	while (x < screenWidth)
@@ -60,7 +42,8 @@ void calc(t_info *info)
 	}
 }
 
-int main_loop(t_info *info)
+int
+	main_loop(t_info *info)
 {
 	calc(info);
 	draw(info);
@@ -68,19 +51,21 @@ int main_loop(t_info *info)
 	return (0);
 }
 
-int main(int argc, char **argv)
+int
+	main(int argc, char **argv)
 {
-	t_info info;
+	t_info	info;
 
-	memcpy(testMap, worldMap, sizeof(worldMap));
 	info.mlx = mlx_init();
 	init_info(&info);
-	if (parsing(argc, argv, &info))
-		return (-1);
-
+	parse(argc, argv, &info);
+	init_map(&info);
+	dup_map(&info);
+	get_map_info(&info);
 	info.win = mlx_new_window(info.mlx, screenWidth, screenHeight, "Cub3D");
 	info.img.img = mlx_new_image(info.mlx, screenWidth, screenHeight);
-	info.img.data = (int *)mlx_get_data_addr(info.img.img, &info.img.bpp, &info.img.line_size, &info.img.endian);
+	info.img.data = (int *)mlx_get_data_addr \
+		(info.img.img, &info.img.bpp, &info.img.line_size, &info.img.endian);
 	mlx_hook(info.win, KEY_EVENT_PRESS, 0, &key_press, &info);
 	mlx_hook(info.win, KEY_EVENT_RELEASE, 0, &key_release, &info);
 	mlx_hook(info.win, KEY_EVENT_EXIT, 0, &exit_press, &info);
