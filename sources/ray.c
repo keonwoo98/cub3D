@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keokim <keokim@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/30 10:21:04 by keokim            #+#    #+#             */
+/*   Updated: 2022/03/30 10:44:30 by keokim           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3d.h"
 
 void
@@ -58,7 +70,7 @@ void
 void
 	start_ray(int x, t_info *info, t_calc *calc)
 {
-	calc->cameraX = 2 * x / (double)screenWidth - 1;
+	calc->cameraX = 2 * x / (double)SCREEN_W - 1;
 	calc->rayDirX = info->ray.dirX + info->ray.planeX * calc->cameraX;
 	calc->rayDirY = info->ray.dirY + info->ray.planeY * calc->cameraX;
 	calc->mapX = (int)info->ray.posX;
