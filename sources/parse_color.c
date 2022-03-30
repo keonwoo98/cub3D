@@ -6,7 +6,7 @@
 /*   By: keokim <keokim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 10:20:53 by keokim            #+#    #+#             */
-/*   Updated: 2022/03/30 10:21:20 by keokim           ###   ########.fr       */
+/*   Updated: 2022/03/30 22:22:38 by keokim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,17 @@ int
 	int		color;
 
 	split = ft_split(str, ',');
+	if (!split)
+		system_error("Malloc Error");
 	i = 0;
 	while (split[i])
 	{
 		color = -1;
 		if (is_valid_string(split[i]))
-			return (RETURN_FAILURE);
+			return (free_return_error(split));
 		color = ft_atoi(split[i]);
-		if (color < 0 || color > 255)
-			return (RETURN_FAILURE);
+		if ((color < 0 || color > 255) || *count > 2)
+			return (free_return_error(split));
 		rgb[*count] = color;
 		*count += 1;
 		i++;
@@ -94,15 +96,13 @@ void
 	if (!split)
 		system_error("Malloc Error");
 	if (ft_splitlen(split) < 2)
-		exit_error("Map: Invalid Color Value\n");
+		free_exit_error(split, "Map: Invalid Color Value\n");
 	while (split[i])
 	{
 		if (parse_color(split[i], rgb, &count))
-			exit_error("Map: Invalid Color Value\n");
+			free_exit_error(split, "Map: Invalid Color Value\n");
 		i++;
 	}
-	if (count != 3)
-		exit_error("Map: Invalid Color Value\n");
 	floor_ceiling(info, rgb, flag);
 	info->color_flag++;
 	free_double_char(split);

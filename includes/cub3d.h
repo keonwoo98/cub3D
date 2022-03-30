@@ -6,7 +6,7 @@
 /*   By: keokim <keokim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 10:21:17 by keokim            #+#    #+#             */
-/*   Updated: 2022/03/30 10:45:26 by keokim           ###   ########.fr       */
+/*   Updated: 2022/03/30 22:16:54 by keokim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,8 @@ void		input_wall_texture(int x, t_info *info, t_calc *calc);
 */
 void		exit_error(char *err_msg);
 void		system_error(char *err_msg);
+void		free_exit_error(char **str, char *err_msg);
+int			free_return_error(char **str);
 /*
 **	utils.c
 */

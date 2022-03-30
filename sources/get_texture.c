@@ -6,7 +6,7 @@
 /*   By: keokim <keokim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 10:20:37 by keokim            #+#    #+#             */
-/*   Updated: 2022/03/30 10:21:20 by keokim           ###   ########.fr       */
+/*   Updated: 2022/03/30 12:50:59 by keokim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,10 @@ int
 	if (!split)
 		system_error("Malloc Error");
 	if (ft_splitlen(split) != 2 || check_extension(split[1], ".xpm"))
+	{
+		free_double_char(split);
 		return (RETURN_FAILURE);
+	}
 	fd = open(split[1], O_RDONLY);
 	if (fd < 0)
 		return (RETURN_FAILURE);
