@@ -1,23 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keokim <keokim@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/30 10:21:17 by keokim            #+#    #+#             */
+/*   Updated: 2022/03/30 10:45:26 by keokim           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
-#include "../minilibx/mlx.h"
-#include "../Libft/libft.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <fcntl.h>
+# include "../minilibx/mlx.h"
+# include "../Libft/libft.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <math.h>
+# include <fcntl.h>
 
 # define RETURN_SUCCESS 0
 # define RETURN_FAILURE 1
 
-# define texWidth 64
-# define texHeight 64
-# define mapWidth 24
-# define mapHeight 24
-# define screenWidth 1280
-# define screenHeight 720
+# define TEX_W 64
+# define TEX_H 64
+# define SCREEN_W 1280
+# define SCREEN_H 720
 
 # define MAX_FD 256
 # define BUFFER_SIZE 1024
@@ -45,23 +55,12 @@ enum e_dir {
 	EA = 3
 };
 
-// # define RED 0xFF0000
-// # define GREEN 0x00FF00
-// # define BLUE 0x0000FF
-// # define BLACK 0x000000
-// # define WHITE 0xFFFFFF
-// # define YELLOW 0xFFFF00
-// # define GREY 0x7F7F7F
-// # define GOLD 0xFFD700
-// # define SILVER 0xC0C0C0
-// # define SKYBLUE 0x87CEEB
-
-typedef struct s_node t_node;
+typedef struct s_node	t_node;
 
 typedef struct s_node
 {
-	char *map;
-	t_node *next;
+	char		*map;
+	t_node		*next;
 }t_node;
 
 typedef struct s_maplist
@@ -73,77 +72,77 @@ typedef struct s_maplist
 
 typedef struct s_ray
 {
-	double posX;
-	double posY;
-	double dirX;
-	double dirY;
-	double planeX;
-	double planeY;
+	double		posX;
+	double		posY;
+	double		dirX;
+	double		dirY;
+	double		planeX;
+	double		planeY;
 }t_ray;
 
 typedef struct s_img
 {
-	void *img;
-	char *img_addr;
-	int *data;
-	int line_size;
-	int bpp;
-	int endian;
-	int img_width;
-	int img_height;
+	void		*img;
+	char		*img_addr;
+	int			*data;
+	int			line_size;
+	int			bpp;
+	int			endian;
+	int			img_width;
+	int			img_height;
 }t_img;
 
 typedef struct s_info
 {
-	void *mlx;
-	void *win;
-	int **buf;
-	int **texture;
-	char **map;
-	int map_width;
-	int map_height;
-	int key_a;
-	int key_w;
-	int key_s;
-	int key_d;
-	int player;
-	int color_flag;
-	int dir_flag;
-	int pos_flag;
-	int floor;
-	int ceiling;
-	t_img img;
-    t_ray ray;
-	t_maplist *list;
+	void		*mlx;
+	void		*win;
+	int			**buf;
+	int			**texture;
+	char		**map;
+	int			map_width;
+	int			map_height;
+	int			key_a;
+	int			key_w;
+	int			key_s;
+	int			key_d;
+	int			player;
+	int			color_flag;
+	int			dir_flag;
+	int			pos_flag;
+	int			floor;
+	int			ceiling;
+	t_img		img;
+	t_ray		ray;
+	t_maplist	*list;
 }t_info;
 
 typedef struct s_calc
 {
-	double cameraX;
-	double rayDirX;
-	double rayDirY;
-	int mapX;
-	int mapY;
-	double sideDistX;
-	double sideDistY;
-	double deltaDistX;
-	double deltaDistY;
-	double perpWallDist;
-	int stepX;
-	int stepY;
-	int hit;
-	int side;
-	int lineHeight;
-	int drawStart;
-	int drawEnd;
-	int texNum;
-	double wallX;
-	int texX;
-	int texY;
-	double step;
-	double texPos;
-	double spriteX;
-	double spriteY;
+	double		cameraX;
+	double		rayDirX;
+	double		rayDirY;
+	int			mapX;
+	int			mapY;
+	double		sideDistX;
+	double		sideDistY;
+	double		deltaDistX;
+	double		deltaDistY;
+	double		perpWallDist;
+	int			stepX;
+	int			stepY;
+	int			hit;
+	int			side;
+	int			lineHeight;
+	int			drawStart;
+	int			drawEnd;
+	int			texNum;
+	double		wallX;
+	int			texX;
+	int			texY;
+	double		step;
+	double		texPos;
+	double		spriteX;
+	double		spriteY;
 }t_calc;
 
 /*

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keokim <keokim@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/30 10:21:10 by keokim            #+#    #+#             */
+/*   Updated: 2022/03/30 10:43:40 by keokim           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3d.h"
 
 int
@@ -59,5 +71,5 @@ void
 	mlx_clear_window(info->mlx, info->win);
 	mlx_destroy_window(info->mlx, info->win);
 	free_double_int(info->texture, 4);
-	free_double_int(info->buf, screenHeight);
+	free_double_int(info->buf, SCREEN_H);
 }

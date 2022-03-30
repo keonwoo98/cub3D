@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keokim <keokim@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/30 10:20:40 by keokim            #+#    #+#             */
+/*   Updated: 2022/03/30 10:43:26 by keokim           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3d.h"
 
 void
@@ -23,12 +35,12 @@ void
 
 	init_default(info);
 	i = -1;
-	info->buf = (int **)ft_calloc(sizeof(int *) * screenHeight, 1);
+	info->buf = (int **)ft_calloc(sizeof(int *) * SCREEN_H, 1);
 	if (!info->buf)
 		system_error("Malloc Error");
-	while (++i < screenHeight)
+	while (++i < SCREEN_H)
 	{
-		info->buf[i] = (int *)ft_calloc(sizeof(int) * screenWidth, 1);
+		info->buf[i] = (int *)ft_calloc(sizeof(int) * SCREEN_W, 1);
 		if (!info->buf[i])
 			system_error("Malloc Error");
 	}
@@ -39,7 +51,7 @@ void
 	while (++i < 4)
 	{
 		info->texture[i] = \
-			(int *)ft_calloc(sizeof(int) * (texHeight * texWidth), 1);
+			(int *)ft_calloc(sizeof(int) * (TEX_H * TEX_W), 1);
 		if (!info->texture[i])
 			system_error("Malloc Error");
 	}
