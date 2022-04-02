@@ -18,7 +18,7 @@
 - 벽이 어느 방향을 바라보고 있냐에 따라 다른 texture를 적용해야 한다. (North, South, East, West)
 - floor 와 ceiling 색을 다른 색으로 적용해야 한다.
 - The program displays the image in a window and respects the following rules:
-	- 왼쪽 오른쪽 방향키는 왼쪽, 오른쪽을 보게 만들어야 하낟.
+	- 왼쪽 오른쪽 방향키는 왼쪽, 오른쪽을 보게 만들어야 한다.
 	- The W, A, S, and D keys must allow you to move the point of view through the maze.
 	- Pressing ESC must close the window and quit the program cleanly.
 	- Clicking on the red cross on the window’s frame must close the window and quit the program cleanly.

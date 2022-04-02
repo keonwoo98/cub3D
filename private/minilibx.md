@@ -187,5 +187,8 @@ mlx_string_put (void *mlx_ptr, void *win_ptr, int x, int y, int color, char *str
 
 - endian 문제를 고려할 것. blue bytes가 항상 LSB여야 한다.
 
-	| 0 | R | G | B |  color integer
-	+---+---+---+---+
+- color integer :  
+```
+| 0 | R | G | B |
++---+---+---+---+
+```
