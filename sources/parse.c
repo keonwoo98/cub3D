@@ -6,7 +6,7 @@
 /*   By: keokim <keokim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 10:20:59 by keokim            #+#    #+#             */
-/*   Updated: 2022/03/30 12:45:21 by keokim           ###   ########.fr       */
+/*   Updated: 2022/04/06 17:26:13 by keokim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,18 @@ void
 	check_arg(int argc, char **argv)
 {
 	int		i;
+	int		fd;
 
 	if (argc != 2)
 		exit_error("Input Argument Error\n");
 	i = ft_strlen(argv[1]) - 4;
 	if (ft_strncmp(&argv[1][i], ".cub", 4))
 		exit_error("File Extension Error\n");
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		system_error(".cub Path Error");
+	if (close(fd) < 0)
+		system_error("Close Failed Error");
 }
 
 void
