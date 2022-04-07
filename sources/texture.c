@@ -6,7 +6,7 @@
 /*   By: keokim <keokim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 10:21:07 by keokim            #+#    #+#             */
-/*   Updated: 2022/03/30 10:45:13 by keokim           ###   ########.fr       */
+/*   Updated: 2022/04/07 18:29:28 by keokim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ void
 	if (calc->drawEnd >= SCREEN_H)
 		calc->drawEnd = SCREEN_H - 1;
 	if (calc->rayDirX > 0 && calc->side == 0)
-		calc->texNum = SO;
-	else if (calc->rayDirX < 0 && calc->side == 0)
 		calc->texNum = NO;
+	else if (calc->rayDirX < 0 && calc->side == 0)
+		calc->texNum = SO;
 	else if (calc->rayDirY > 0 && calc->side == 1)
-		calc->texNum = EA;
-	else
 		calc->texNum = WE;
+	else
+		calc->texNum = EA;
 	if (calc->side == 0)
 		calc->wallX = info->ray.posY + calc->perpWallDist * calc->rayDirY;
 	else
